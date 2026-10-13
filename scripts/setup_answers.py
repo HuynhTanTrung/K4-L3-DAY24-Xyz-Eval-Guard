@@ -19,7 +19,7 @@ import sys
 import time
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from config import ROOT_DIR, TEST_SET_PATH, ANSWERS_PATH, GENERATION_MODEL
+from config import ROOT_DIR, TEST_SET_PATH, ANSWERS_PATH, GENERATION_MODEL, OPENAI_BASE_URL
 
 
 def check_day18_files() -> bool:
@@ -94,7 +94,7 @@ def run_query(q: str, search, reranker, top_k: int, client=None) -> tuple[str, l
         try:
             if client is None:
                 from openai import OpenAI
-                client = OpenAI()
+                client = OpenAI(base_url=OPENAI_BASE_URL)
             ctx = "\n\n".join(contexts)
             resp = client.chat.completions.create(
                 model=GENERATION_MODEL,
@@ -142,7 +142,7 @@ def main(argv=None):
     client = None
     if OPENAI_API_KEY:
         from openai import OpenAI
-        client = OpenAI()
+        client = OpenAI(base_url=OPENAI_BASE_URL)
     t_start = time.time()
 
     for i, item in enumerate(test_set):
